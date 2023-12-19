@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Images/needle.png</file>
+        <file>Images/rpmgauge.png</file>
+        <file>Images/smallring.png</file>
+        <file>Images/speeedgauge.png</file>
+    </qresource>
+</RCC>
