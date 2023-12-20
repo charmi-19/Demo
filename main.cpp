@@ -1,5 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <datareceiver.h>
+#include<QQmlContext>
 
 int main(int argc, char *argv[])
 {
@@ -7,8 +9,15 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
     QGuiApplication app(argc, argv);
-
     QQmlApplicationEngine engine;
+
+    DataReceiver obj;
+    // QObject::connect(&obj, SIGNAL(randomNumberChanged()), &obj, SLOT(handleRandomNumberChange(double)));
+    QObject::connect(&obj, SIGNAL(randomNumberChanged()), &obj, SLOT(randomNumber()));
+
+    QQmlContext * rootContext = engine.rootContext();
+    rootContext->setContextProperty("charmi", &obj);
+
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(
         &engine,
