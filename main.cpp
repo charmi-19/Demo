@@ -12,7 +12,6 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     DataReceiver obj;
-    // QObject::connect(&obj, SIGNAL(randomNumberChanged()), &obj, SLOT(handleRandomNumberChange(double)));
     QObject::connect(&obj, SIGNAL(randomNumberChanged()), &obj, SLOT(randomNumber()));
 
     QQmlContext * rootContext = engine.rootContext();

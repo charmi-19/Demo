@@ -17,14 +17,14 @@ DataReceiver::DataReceiver(QObject *parent)
 
 double DataReceiver::receiveData() {
     qDebug() << "Trying to connect D-Bus...";
-    QDBusInterface dbusInterface("com.example.RandomNumbers", "/com/example/RandomNumbers", "com.example.RandomNumbers", QDBusConnection::sessionBus());
+    QDBusInterface dbusInterface("net.lew21.pydbus.ClientServerExample11", "/net/lew21/pydbus/ClientServerExample11", "net.lew21.pydbus.ClientServerExample11", QDBusConnection::sessionBus());
 
     // Show error if connection is failed
     if(!dbusInterface.isValid()) {
         qDebug() << "Failed to create DBusInterface ";
     }
 
-    QDBusReply<double> rpm = dbusInterface.call("GenerateRandomNumbers");
+    QDBusReply<double> rpm = dbusInterface.call("RPM");
 
     if(!rpm.isValid()) {
         qWarning() << "Failed to call method:" << rpm.error().message();
