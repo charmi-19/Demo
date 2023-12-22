@@ -6,19 +6,19 @@
 class DataReceiver : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString rpm READ rpm NOTIFY rpmChanged FINAL)
+    Q_PROPERTY(double rpm READ rpm NOTIFY rpmChanged FINAL)
 public:
     explicit DataReceiver(QObject *parent = nullptr);
-    Q_INVOKABLE QString receiveData();
+    Q_INVOKABLE double receiveData();
 
 public slots:
-    QString rpm();
+    double rpm();
 
 signals:
     void rpmChanged();
 
 private:
-    QString m_rpm;
+    double m_rpm;
 };
 
 #endif // DATARECEIVER_H

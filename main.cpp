@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     DataReceiver obj;
-    QObject::connect(&obj, SIGNAL(randomNumberChanged()), &obj, SLOT(randomNumber()));
+    QObject::connect(&obj, SIGNAL(rpmChanged()), &obj, SLOT(rpm()));
 
     QQmlContext * rootContext = engine.rootContext();
     rootContext->setContextProperty("charmi", &obj);

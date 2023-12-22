@@ -15,9 +15,9 @@ DataReceiver::DataReceiver(QObject *parent)
 
 // Receiver function
 
-QString DataReceiver::receiveData() {
+double DataReceiver::receiveData() {
     qDebug() << "Trying to connect D-Bus...";
-    QDBusInterface dbusInterface("net.lew21.pydbus.ClientServerExample11", "/net/lew21/pydbus/ClientServerExample11", "net.lew21.pydbus.ClientServerExample11", QDBusConnection::sessionBus());
+    QDBusInterface dbusInterface("net.lew21.pydbus.ClientServerExample111", "/net/lew21/pydbus/ClientServerExample111", "net.lew21.pydbus.ClientServerExample111", QDBusConnection::sessionBus());
 
     // Show error if connection is failed
     if(!dbusInterface.isValid()) {
@@ -28,17 +28,17 @@ QString DataReceiver::receiveData() {
 
     if(!rpm.isValid()) {
         qWarning() << "Failed to call method:" << rpm.error().message();
-        qDebug() << "Error printing random number";
+        qDebug() << "Error printing rpm";
     } else {
-        m_rpm = rpm.value();
-        qDebug() << "Output: " << rpm.value();
+        m_rpm = rpm.value().toDouble();
+        qDebug() << "Output: " << rpm.value().toDouble();
     }
 
     emit rpmChanged();
-    return rpm.value();
+    return rpm.value().toDouble();
 }
 
-QString DataReceiver::rpm()
+double DataReceiver::rpm()
 {
     return m_rpm;
 }
