@@ -73,7 +73,7 @@ Window {
                 // rotation: -90
                 anchors.bottom: parent.bottom
                 // anchors.centerIn: parent.bottom
-                width: 200
+                width: charmi.battery * 2.6
                 height: 120
                 color: "green"
             }
@@ -89,7 +89,7 @@ Window {
                 anchors.centerIn: batteryfill
                 font.pixelSize: 24
                 color: "white"
-                text: "100" + "%"
+                text: charmi.battery + "%"
                 rotation: -270
             }
         }

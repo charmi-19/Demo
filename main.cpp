@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
 
     DataReceiver obj;
     QObject::connect(&obj, SIGNAL(rpmChanged()), &obj, SLOT(rpm()));
+    QObject::connect(&obj, SIGNAL(batteryChanged()), &obj, SLOT(battery()));
 
     QQmlContext * rootContext = engine.rootContext();
     rootContext->setContextProperty("charmi", &obj);
