@@ -50,7 +50,7 @@ Window {
                     }
                 }
             }
-            value: 50
+            value: charmi.rpm * 3.14 * 2.5
             maximumValue: 150
             width: 410
             height: 410
@@ -112,7 +112,7 @@ Window {
                 }
             }
             value: charmi.rpm
-            maximumValue: 50
+            maximumValue: 15
             width: 410
             height: 410
             anchors.right: battery.left

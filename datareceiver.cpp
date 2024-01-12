@@ -11,6 +11,10 @@ DataReceiver::DataReceiver(QObject *parent)
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &DataReceiver::receiveRPMData);
     timer->start(1000);
+
+    QTimer *timer1 = new QTimer(this);
+    connect(timer1, &QTimer::timeout, this, &DataReceiver::receiveBatteryData);
+    timer1->start(10000);
 }
 
 // Receiver function
@@ -27,11 +31,11 @@ double DataReceiver::receiveRPMData() {
     QDBusReply<QString> rpm = dbusInterface.call("RPM");
 
     if(!rpm.isValid()) {
-        qWarning() << "Failed to call method:" << rpm.error().message();
+        qWarning() << "Failed to call method for rps:" << rpm.error().message();
         qDebug() << "Error printing rpm";
     } else {
         m_rpm = rpm.value().toDouble();
-        qDebug() << "RPM: " << rpm.value().toDouble();
+        qDebug() << "RPS: " << rpm.value().toDouble();
     }
 
     emit rpmChanged();
@@ -39,7 +43,7 @@ double DataReceiver::receiveRPMData() {
 }
 
 double DataReceiver::receiveBatteryData() {
-    qDebug() << "Trying to connect D-Bus...";
+    qDebug() << "Trying to connect D-Bus for Battery...";
     QDBusInterface dbusInterface("com.dbus.batteryService", "/com/dbus/batteryService", "com.dbus.batteryService", QDBusConnection::sessionBus());
 
     // Show error if connection is failed
@@ -50,7 +54,7 @@ double DataReceiver::receiveBatteryData() {
     QDBusReply<QString> battery = dbusInterface.call("getBatteryLevel");
 
     if(!battery.isValid()) {
-        qWarning() << "Failed to call method:" << battery.error().message();
+        qWarning() << "Failed to call method for battery:" << battery.error().message();
         qDebug() << "Error printing battery data";
     } else {
         m_battery = battery.value().toDouble();
