@@ -51,7 +51,9 @@ Window {
                 }
             }
             value: charmi.rpm * 3.14 * 2.5
+            stepSize: 20
             maximumValue: 150
+            minimumValue: 0
             width: 410
             height: 410
             anchors.left: battery.right
@@ -95,6 +97,19 @@ Window {
         }
         CircularGauge {
             id:rpmguage
+            property real rpmValue: charmi.rpm
+            NumberAnimation {
+                id: rpmAnimation
+                target: rpmguage
+                property: "value"
+                duration: 1000 // Adjust the duration as needed
+                easing.type: Easing.Linear
+            }
+            onRpmValueChanged: {
+                rpmAnimation.from = rpmguage.value
+                rpmAnimation.to = rpmValue
+                rpmAnimation.start()
+            }
             style: CircularGaugeStyle {
                 background: Rectangle {
                     implicitHeight: speedometer.height
@@ -110,9 +125,11 @@ Window {
                         }
                     }
                 }
+                labelStepSize: 1
             }
-            value: charmi.rpm
+            // value: charmi.rpm
             maximumValue: 15
+            stepSize: 2
             width: 410
             height: 410
             anchors.right: battery.left

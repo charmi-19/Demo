@@ -6,15 +6,15 @@
 class DataReceiver : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(double rpm READ rpm NOTIFY rpmChanged FINAL)
+    Q_PROPERTY(float rpm READ rpm NOTIFY rpmChanged FINAL)
     Q_PROPERTY(double battery READ battery NOTIFY batteryChanged FINAL)
 public:
     explicit DataReceiver(QObject *parent = nullptr);
-    Q_INVOKABLE double receiveRPMData();
+    Q_INVOKABLE float receiveRPMData();
     Q_INVOKABLE double receiveBatteryData();
 
 public slots:
-    double rpm();
+    float rpm();
     double battery();
 
 signals:
@@ -22,7 +22,7 @@ signals:
     void batteryChanged();
 
 private:
-    double m_rpm;
+    float m_rpm;
     double m_battery;
 };
 

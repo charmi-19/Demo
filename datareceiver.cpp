@@ -10,7 +10,7 @@ DataReceiver::DataReceiver(QObject *parent)
 {
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &DataReceiver::receiveRPMData);
-    timer->start(1000);
+    timer->start(100);
 
     QTimer *timer1 = new QTimer(this);
     connect(timer1, &QTimer::timeout, this, &DataReceiver::receiveBatteryData);
@@ -19,7 +19,7 @@ DataReceiver::DataReceiver(QObject *parent)
 
 // Receiver function
 
-double DataReceiver::receiveRPMData() {
+float DataReceiver::receiveRPMData() {
     qDebug() << "Trying to connect D-Bus...";
     QDBusInterface dbusInterface("net.lew21.pydbus.ClientServerExample111", "/net/lew21/pydbus/ClientServerExample111", "net.lew21.pydbus.ClientServerExample111", QDBusConnection::sessionBus());
 
@@ -34,12 +34,12 @@ double DataReceiver::receiveRPMData() {
         qWarning() << "Failed to call method for rps:" << rpm.error().message();
         qDebug() << "Error printing rpm";
     } else {
-        m_rpm = rpm.value().toDouble();
-        qDebug() << "RPS: " << rpm.value().toDouble();
+        m_rpm = rpm.value().toFloat();
+        qDebug() << "RPS: " << rpm.value().toFloat();
     }
 
     emit rpmChanged();
-    return rpm.value().toDouble();
+    return rpm.value().toFloat();
 }
 
 double DataReceiver::receiveBatteryData() {
@@ -65,7 +65,7 @@ double DataReceiver::receiveBatteryData() {
     return battery.value().toDouble();
 }
 
-double DataReceiver::rpm()
+float DataReceiver::rpm()
 {
     return m_rpm;
 }
