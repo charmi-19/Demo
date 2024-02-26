@@ -7,5 +7,9 @@
         <file>assets/needle.svg</file>
         <file>assets/tickmark.svg</file>
         <file>assets/battery2.png</file>
+        <file>assets/image.png</file>
+        <file>assets/bg-mask.png</file>
+        <file>assets/left.svg</file>
+        <file>assets/right.svg</file>
     </qresource>
 </RCC>

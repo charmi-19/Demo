@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <datareceiver.h>
 #include<QQmlContext>
+#include <QQuickWindow>
 
 int main(int argc, char *argv[])
 {
@@ -12,11 +13,11 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     DataReceiver obj;
-    QObject::connect(&obj, SIGNAL(rpmChanged()), &obj, SLOT(rpm()));
+    QObject::connect(&obj, SIGNAL(rpsChanged()), &obj, SLOT(rps()));
     QObject::connect(&obj, SIGNAL(batteryChanged()), &obj, SLOT(battery()));
 
     QQmlContext * rootContext = engine.rootContext();
-    rootContext->setContextProperty("charmi", &obj);
+    rootContext->setContextProperty("Instrument_Cluster", &obj);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(
@@ -29,6 +30,13 @@ int main(int argc, char *argv[])
         },
         Qt::QueuedConnection);
     engine.load(url);
+
+    if (!engine.rootObjects().isEmpty()) {
+        auto window = qobject_cast<QQuickWindow*>(engine.rootObjects().first());
+        if (window) {
+            // window->showFullScreen();
+        }
+    }
 
     return app.exec();
 }
