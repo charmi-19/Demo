@@ -23,6 +23,9 @@ DataReceiver::DataReceiver(QObject *parent)
     QTimer *timer4 = new QTimer(this);
     connect(timer4, &QTimer::timeout, this, &DataReceiver::receiveIndicatorInformation);
     timer1->start(10);
+
+    QDBusInterface dbusInterface("com.example.dbus.gear", "/com/example/dbus/gear", "com.example.dbus.gear", QDBusConnection::sessionBus());
+    dbusInterface.call("set_gear", "D");
 }
 
 // Receiver function
@@ -112,7 +115,7 @@ QString DataReceiver::receiveIndicatorInformation()
         qWarning() << "Failed to call method for Indicator Information:" << indicator.error().message();
         qDebug() << "Error printing indicator information";
     } else {
-        m_gear = indicator.value();
+        m_indicator = indicator.value();
         qDebug() << "Indicator: " << indicator.value();
     }
 

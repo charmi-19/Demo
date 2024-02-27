@@ -15,6 +15,8 @@ int main(int argc, char *argv[])
     DataReceiver obj;
     QObject::connect(&obj, SIGNAL(rpsChanged()), &obj, SLOT(rps()));
     QObject::connect(&obj, SIGNAL(batteryChanged()), &obj, SLOT(battery()));
+    QObject::connect(&obj, SIGNAL(gearChanged()), &obj, SLOT(gear()));
+    QObject::connect(&obj, SIGNAL(indicatorChanged()), &obj, SLOT(indicator()));
 
     QQmlContext * rootContext = engine.rootContext();
     rootContext->setContextProperty("Instrument_Cluster", &obj);

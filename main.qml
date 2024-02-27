@@ -21,26 +21,12 @@ Window {
         anchors.centerIn: parent
         rotation: -90
 
-        Image {
-            source: "qrc:/assets/image.png"
-            anchors.fill: parent
-        }
-
         //background of application
         Rectangle {
             anchors.fill: parent
             width: parent.width
             height: parent.height
             color: "black"
-            RadialGradient {
-                anchors.fill: parent
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "gray" }
-                    GradientStop { position: 0.05; color: "gray" }
-                    GradientStop { position: 0.4; color: "transparent" }
-                    GradientStop { position: 1.0; color: "black" }
-                }
-            }
         }
 
         // Speedometer
@@ -53,7 +39,13 @@ Window {
                     color: "#000"
                     radius: implicitWidth / 2
                     border.color: "#fff"
-                    border.width: 2
+                    border.width: 3
+                    Image {
+                        source: "qrc:/assets/background.png"
+                        anchors.centerIn: parent
+                        height: parent.implicitHeight
+                        width: parent.implicitWidth
+                    }
                 }
                 foreground: Item {
                     clip: true
@@ -66,6 +58,12 @@ Window {
                         border.color: "#fff"
                         border.width: 3
                         anchors.bottomMargin: -border.width
+                        Image {
+                            source: "qrc:/assets/background.png"
+                            anchors.centerIn: parent
+                            height: parent.height
+                            width: parent.width
+                        }
                         Text {
                             id: speed
                             text: parseInt(Instrument_Cluster.rps * 3.14 * 2.5) // need to change
@@ -89,7 +87,7 @@ Window {
             minimumValue: 0
             width: 370
             height: 370
-            anchors.left: battery.right
+            anchors.left: bgImageContainer.right
             anchors.leftMargin: 0
             anchors.top: parent.top
             anchors.topMargin: 15
@@ -98,7 +96,8 @@ Window {
         Image {
             id: leftIndicator
             anchors {
-                right: battery.left
+                right: bgImageContainer.left
+                rightMargin: -40
                 top: parent.top
                 topMargin: 15
             }
@@ -109,41 +108,37 @@ Window {
             opacity: 0.5
         }
 
-        // Battery
-        Rectangle{
-            id: battery
-            rotation: -90
-            anchors.centerIn: parent
-            width:280
-            height:130
+        Rectangle {
+            id: bgImageContainer
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: speedometer.top
+            anchors.topMargin: 25
+            width: 400
+            height: 250
             color: "transparent"
-            Rectangle {
-                id: batteryfill
-                anchors.bottom: parent.bottom
-                width: Instrument_Cluster.battery * 2.6
-                height: 120
-                color: "green"
+            Image {
+                id: bgImage
+                anchors.centerIn: parent
+                source: "qrc:/assets/bg-mask.png"
+                anchors.fill: parent
+                fillMode: Image.PreserveAspectCrop
+                rotation: 0
             }
             Image {
-                width:320
-                height:160
+                id: bgImageHighlights
                 anchors.centerIn: parent
-                id: batteryImage
-                source: "qrc:/assets/battery2.png"
-            }
-            Text {
-                anchors.centerIn: batteryfill
-                font.pixelSize: 24
-                color: "white"
-                text: Instrument_Cluster.battery + "%"
-                rotation: -270
+                source: "qrc:/assets/car-highlights.png"
+                anchors.fill: parent
+                fillMode: Image.PreserveAspectCrop
+                rotation: 0
             }
         }
 
         Image {
             id: rightIndicator
             anchors {
-                left: battery.right
+                left: bgImageContainer.right
+                leftMargin: -40
                 top: parent.top
                 topMargin: 15
             }
@@ -160,25 +155,66 @@ Window {
             running: true
             repeat: true
             onTriggered: {
-                console.log("==================",Instrument_Cluster.indicator, "==================")
+                console.log("==================",Instrument_Cluster.gear, "middleTest", Instrument_Cluster.indicator, "==================")
                 if(Instrument_Cluster.indicator === "L") {
                     leftIndicator.visible = !leftIndicator.visible;
                     leftIndicator.opacity = 1;
-                    rightIndicator.opacity = 0.5
+                    rightIndicator.opacity = 0.5;
+                    bgImage.rotation = bgImage.rotation - 0.5;
+                    bgImageHighlights.rotation = bgImageHighlights.rotation - 0.5;
                 }
                 else if(Instrument_Cluster.indicator === "R") {
                     rightIndicator.visible = !rightIndicator.visible;
                     rightIndicator.opacity = 1;
                     leftIndicator.opacity = 0.5;
+                    bgImage.rotation = bgImage.rotation + 0.5;
+                    bgImageHighlights.rotation = bgImageHighlights.rotation + 0.5;
                 }
                 else{
-                    leftIndicator.visible = false;
+                    leftIndicator.visible = true;
                     leftIndicator.opacity = 0.5;
-                    rightIndicator.visible = false;
+                    rightIndicator.visible = true;
                     rightIndicator.opacity = 0.5;
+                    bgImage.rotation = 0;
+                    bgImageHighlights.rotation = 0;
                 }
             }
+        }
 
+        // Battery
+        Rectangle{
+            id: battery
+            anchors {
+                bottom: parent.bottom
+                bottomMargin: 50
+                horizontalCenter: parent.horizontalCenter
+            }
+            color: "transparent"
+            Rectangle {
+                id: batteryfill
+                anchors {
+                    top: batteryImage.top
+                    topMargin: 8
+                    left: batteryImage.left
+                    leftMargin: 10
+                }
+                width: parseInt(Instrument_Cluster.battery) * 1.2
+                height: 58
+                color: "green"
+            }
+            Image {
+                width: 140
+                height: 70
+                anchors.centerIn: parent
+                id: batteryImage
+                source: "qrc:/assets/battery.png"
+            }
+            Text {
+                anchors.centerIn: batteryImage
+                font.pixelSize: 20
+                color: "white"
+                text: Instrument_Cluster.battery ? parseInt(Instrument_Cluster.battery) + "%" : "0%"
+            }
         }
 
         // RPS Guage
@@ -204,7 +240,13 @@ Window {
                     color: "#000"
                     radius: implicitWidth / 2
                     border.color: "#fff"
-                    border.width: 2
+                    border.width: 3
+                    Image {
+                        source: "qrc:/assets/background.png"
+                        anchors.centerIn: parent
+                        height: parent.implicitHeight
+                        width: parent.implicitWidth
+                    }
                 }
                 foreground: Item {
                     Rectangle {
@@ -216,6 +258,12 @@ Window {
                         border.color: "#fff"
                         border.width: 3
                         anchors.bottomMargin: -border.width
+                        Image {
+                            source: "qrc:/assets/background.png"
+                            anchors.centerIn: parent
+                            height: parent.height
+                            width: parent.width
+                        }
                         Text {
                             id: rps
                             text: Instrument_Cluster.gear // need to change
@@ -232,7 +280,7 @@ Window {
             stepSize: 0.5
             width: 370
             height: 370
-            anchors.right: battery.left
+            anchors.right: bgImageContainer.left
             anchors.rightMargin: 0
             anchors.top: parent.top
             anchors.topMargin: 15
