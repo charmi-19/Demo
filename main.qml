@@ -33,18 +33,28 @@ Window {
         CircularGauge {
             id:speedometer
             style: CircularGaugeStyle {
-                background: Rectangle {
-                    implicitHeight: speedometer.height
-                    implicitWidth: speedometer.width
-                    color: "#000"
-                    radius: implicitWidth / 2
-                    border.color: "#fff"
-                    border.width: 3
-                    Image {
-                        source: "qrc:/assets/background.png"
-                        anchors.centerIn: parent
-                        height: parent.implicitHeight
-                        width: parent.implicitWidth
+                background: Canvas {
+                    id: speedometerCanvas
+                    width: speedometer.implicitWidth
+                    height: speedometer.implicitHeight
+                    onPaint: {
+                        var ctx = getContext("2d");
+                        var gradient = ctx.createRadialGradient(speedometerCanvas.width / 2, speedometerCanvas.height / 2, 0, speedometerCanvas.width / 2, speedometerCanvas.height / 2, speedometerCanvas.width / 2);
+
+                        gradient.addColorStop(0, "#000");
+                        gradient.addColorStop(0.82, "#000");
+                        gradient.addColorStop(1, Instrument_Cluster.themeColor);
+
+                        ctx.fillStyle = gradient;
+                        ctx.arc(speedometerCanvas.width / 2, speedometerCanvas.height / 2, speedometerCanvas.width / 2, 0, 2 * Math.PI);
+                        ctx.fill();
+                    }
+                    Connections {
+                        target: Instrument_Cluster
+                        onThemeColorChanged: {
+                            // Trigger repaint of the canvas whenever themeColor changes
+                            speedometerCanvas.requestPaint();
+                        }
                     }
                 }
                 foreground: Item {
@@ -58,11 +68,29 @@ Window {
                         border.color: "#fff"
                         border.width: 3
                         anchors.bottomMargin: -border.width
-                        Image {
-                            source: "qrc:/assets/background.png"
-                            anchors.centerIn: parent
-                            height: parent.height
+                        Canvas {
+                            id: innerSpeedometerCanvas
                             width: parent.width
+                            height: parent.height
+                            onPaint: {
+                                var ctx = getContext("2d");
+                                var gradient = ctx.createRadialGradient(innerSpeedometerCanvas.width / 2, innerSpeedometerCanvas.height / 2, 0, innerSpeedometerCanvas.width / 2, innerSpeedometerCanvas.height / 2, innerSpeedometerCanvas.width / 2);
+
+                                gradient.addColorStop(0, "#000");
+                                gradient.addColorStop(0.82, "#000");
+                                gradient.addColorStop(1, Instrument_Cluster.themeColor);
+
+                                ctx.fillStyle = gradient;
+                                ctx.arc(innerSpeedometerCanvas.width / 2, innerSpeedometerCanvas.height / 2, innerSpeedometerCanvas.width / 2, 0, 2 * Math.PI);
+                                ctx.fill();
+                            }
+                            Connections {
+                                target: Instrument_Cluster
+                                onThemeColorChanged: {
+                                    // Trigger repaint of the canvas whenever themeColor changes
+                                    innerSpeedometerCanvas.requestPaint();
+                                }
+                            }
                         }
                         Text {
                             id: speed
@@ -156,19 +184,19 @@ Window {
             repeat: true
             onTriggered: {
                 console.log("==================",Instrument_Cluster.gear, "middleTest", Instrument_Cluster.indicator, "==================")
-                if(Instrument_Cluster.indicator === "L") {
+                if(Instrument_Cluster.gear !== "P" && Instrument_Cluster.indicator === "L") {
                     leftIndicator.visible = !leftIndicator.visible;
                     leftIndicator.opacity = 1;
                     rightIndicator.opacity = 0.5;
-                    bgImage.rotation = bgImage.rotation - 0.5;
-                    bgImageHighlights.rotation = bgImageHighlights.rotation - 0.5;
+                    bgImage.rotation = bgImage.rotation - 3;
+                    bgImageHighlights.rotation = bgImageHighlights.rotation - 3;
                 }
-                else if(Instrument_Cluster.indicator === "R") {
+                else if(Instrument_Cluster.gear !== "P" && Instrument_Cluster.indicator === "R") {
                     rightIndicator.visible = !rightIndicator.visible;
                     rightIndicator.opacity = 1;
                     leftIndicator.opacity = 0.5;
-                    bgImage.rotation = bgImage.rotation + 0.5;
-                    bgImageHighlights.rotation = bgImageHighlights.rotation + 0.5;
+                    bgImage.rotation = bgImage.rotation + 3;
+                    bgImageHighlights.rotation = bgImageHighlights.rotation + 3;
                 }
                 else{
                     leftIndicator.visible = true;
@@ -234,18 +262,28 @@ Window {
                 rpsAnimation.start()
             }
             style: CircularGaugeStyle {
-                background: Rectangle {
-                    implicitHeight: speedometer.height
-                    implicitWidth: speedometer.width
-                    color: "#000"
-                    radius: implicitWidth / 2
-                    border.color: "#fff"
-                    border.width: 3
-                    Image {
-                        source: "qrc:/assets/background.png"
-                        anchors.centerIn: parent
-                        height: parent.implicitHeight
-                        width: parent.implicitWidth
+                background: Canvas {
+                    id: rpsCanvas
+                    width: rpsguage.implicitWidth
+                    height: rpsguage.implicitHeight
+                    onPaint: {
+                        var ctx = getContext("2d");
+                        var gradient = ctx.createRadialGradient(rpsCanvas.width / 2, rpsCanvas.height / 2, 0, rpsCanvas.width / 2, rpsCanvas.height / 2, rpsCanvas.width / 2);
+
+                        gradient.addColorStop(0, "#000");
+                        gradient.addColorStop(0.82, "#000");
+                        gradient.addColorStop(1, Instrument_Cluster.themeColor);
+
+                        ctx.fillStyle = gradient;
+                        ctx.arc(rpsCanvas.width / 2, rpsCanvas.height / 2, rpsCanvas.width / 2, 0, 2 * Math.PI);
+                        ctx.fill();
+                    }
+                    Connections {
+                        target: Instrument_Cluster
+                        onThemeColorChanged: {
+                            // Trigger repaint of the canvas whenever themeColor changes
+                            rpsCanvas.requestPaint();
+                        }
                     }
                 }
                 foreground: Item {
@@ -258,11 +296,29 @@ Window {
                         border.color: "#fff"
                         border.width: 3
                         anchors.bottomMargin: -border.width
-                        Image {
-                            source: "qrc:/assets/background.png"
-                            anchors.centerIn: parent
-                            height: parent.height
+                        Canvas {
+                            id: innerRPSCanvas
                             width: parent.width
+                            height: parent.height
+                            onPaint: {
+                                var ctx = getContext("2d");
+                                var gradient = ctx.createRadialGradient(innerRPSCanvas.width / 2, innerRPSCanvas.height / 2, 0, innerRPSCanvas.width / 2, innerRPSCanvas.height / 2, innerRPSCanvas.width / 2);
+
+                                gradient.addColorStop(0, "#000");
+                                gradient.addColorStop(0.82, "#000");
+                                gradient.addColorStop(1, Instrument_Cluster.themeColor);
+
+                                ctx.fillStyle = gradient;
+                                ctx.arc(innerRPSCanvas.width / 2, innerRPSCanvas.height / 2, innerRPSCanvas.width / 2, 0, 2 * Math.PI);
+                                ctx.fill();
+                            }
+                            Connections {
+                                target: Instrument_Cluster
+                                onThemeColorChanged: {
+                                    // Trigger repaint of the canvas whenever themeColor changes
+                                    innerRPSCanvas.requestPaint();
+                                }
+                            }
                         }
                         Text {
                             id: rps

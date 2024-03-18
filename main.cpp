@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
     QObject::connect(&obj, SIGNAL(batteryChanged()), &obj, SLOT(battery()));
     QObject::connect(&obj, SIGNAL(gearChanged()), &obj, SLOT(gear()));
     QObject::connect(&obj, SIGNAL(indicatorChanged()), &obj, SLOT(indicator()));
+    QObject::connect(&obj, SIGNAL(themeColorChanged()), &obj, SLOT(themeColor()));
 
     QQmlContext * rootContext = engine.rootContext();
     rootContext->setContextProperty("Instrument_Cluster", &obj);

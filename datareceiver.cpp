@@ -18,14 +18,15 @@ DataReceiver::DataReceiver(QObject *parent)
 
     QTimer *timer3 = new QTimer(this);
     connect(timer3, &QTimer::timeout, this, &DataReceiver::receiveGearInformation);
-    timer1->start(10);
+    timer3->start(10);
 
     QTimer *timer4 = new QTimer(this);
     connect(timer4, &QTimer::timeout, this, &DataReceiver::receiveIndicatorInformation);
-    timer1->start(10);
+    timer4->start(10);
 
-    QDBusInterface dbusInterface("com.example.dbus.gear", "/com/example/dbus/gear", "com.example.dbus.gear", QDBusConnection::sessionBus());
-    dbusInterface.call("set_gear", "D");
+    QTimer *timer5 = new QTimer(this);
+    connect(timer5, &QTimer::timeout, this, &DataReceiver::receiveThemeColorInformation);
+    timer5->start(10);
 }
 
 // Receiver function
@@ -123,6 +124,31 @@ QString DataReceiver::receiveIndicatorInformation()
     return indicator.value();
 }
 
+QString DataReceiver::receiveThemeColorInformation()
+{
+    qDebug() << "Trying to connect D-Bus to receive theme color information...";
+    QDBusInterface dbusInterface("com.example.dBus.ambientlight", "/com/example/dBus/ambientlight", "com.example.dBus.ambientlight", QDBusConnection::sessionBus());
+
+    // Show error if connection is failed
+    if(!dbusInterface.isValid()) {
+        qDebug() << "Failed to create DBusInterface to receive theme color information...";
+    }
+
+    QDBusReply<QString> themeColor = dbusInterface.call("getThemeColor");
+
+    if(!themeColor.isValid()) {
+        qWarning() << "Failed to call method for theme color Information:" << themeColor.error().message();
+        qDebug() << "Error printing theme color information";
+        m_themeColor = "#00f";
+    } else {
+        m_themeColor = themeColor.value();
+        qDebug() << "Theme Color: " << themeColor.value();
+    }
+
+    emit themeColorChanged();
+    return themeColor.value();
+}
+
 float DataReceiver::rps()
 {
     return m_rps;
@@ -141,4 +167,9 @@ QString DataReceiver::gear()
 QString DataReceiver::indicator()
 {
     return m_indicator;
+}
+
+QString DataReceiver::themeColor()
+{
+    return m_themeColor;
 }
